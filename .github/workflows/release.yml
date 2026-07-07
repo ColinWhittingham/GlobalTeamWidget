@@ -54,16 +54,21 @@ jobs:
         id: locate
         shell: pwsh
         run: |
-          $files = Get-ChildItem -Recurse -Filter "*.msix" | Select-Object -ExpandProperty FullName
-          if (-not $files) { Write-Error "No .msix files found after build"; exit 1 }
-          $files | ForEach-Object { Write-Host "Found: $_" }
-          echo "glob=**/*.msix" >> $env:GITHUB_OUTPUT
+          $file = Get-ChildItem -Recurse -Filter "*_x64.msix" | Select-Object -First 1
+          if (-not $file) {
+            Write-Host "All .msix files found:"
+            Get-ChildItem -Recurse -Filter "*.msix" | ForEach-Object { Write-Host $_.FullName }
+            Write-Error "No *_x64.msix file found after build"
+            exit 1
+          }
+          Write-Host "Found: $($file.FullName)"
+          echo "path=$($file.FullName)" >> $env:GITHUB_OUTPUT
 
       - name: Create release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          files: GlobalTeamWidget/AppPackages/**/*_x64.msix
+          files: ${{ steps.locate.outputs.path }}
           generate_release_notes: true
           append_body: true
           body: |
