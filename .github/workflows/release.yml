@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          echo "version=${TAG}.0" >> $GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore GlobalTeamWidget.sln
+
+      - name: Build MSIX
+        run: |
+          msbuild GlobalTeamWidget.Package/GlobalTeamWidget.Package.wapproj `
+            /p:Configuration=Release `
+            /p:Platform=x64 `
+            /p:UapAppxPackageBuildMode=SideloadOnly `
+            /p:AppxPackageSigningEnabled=false `
+            /p:AppxPackageVersion=${{ steps.version.outputs.version }}
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: GlobalTeamWidget.Package/AppPackages/**/*.msix
+          generate_release_notes: true
+          body_prepend: |
+            > **Installation:** This package is unsigned. You must enable [Developer Mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) on the target machine before installing.
