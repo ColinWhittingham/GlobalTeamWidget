@@ -37,7 +37,9 @@ jobs:
             -r win-x64 `
             --no-restore `
             -p:AppxPackageSigningEnabled=false `
-            -p:AppxPackageVersion=${{ steps.version.outputs.version }}
+            -p:AppxPackageVersion=${{ steps.version.outputs.version }} `
+            -p:GenerateAppxPackageOnBuild=true `
+            -p:UapAppxPackageBuildMode=SideloadOnly
 
       - name: Locate MSIX
         id: locate
