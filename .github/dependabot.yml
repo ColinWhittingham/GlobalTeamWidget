@@ -4,7 +4,17 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
+    groups:
+      microsoft-extensions:
+        patterns: [ "Microsoft.Extensions.*" ]
+        update-types: [ "minor", "patch" ]
+      windows-app-sdk:
+        patterns: [ "Microsoft.WindowsAppSDK*" ]
+        update-types: [ "minor", "patch" ]
+      test-tooling:
+        patterns: [ "xunit*", "Microsoft.NET.Test.Sdk", "Moq" ]
+        update-types: [ "minor", "patch" ]
 
   - package-ecosystem: "github-actions"
     directory: "/"
