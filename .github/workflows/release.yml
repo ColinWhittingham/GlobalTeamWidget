@@ -43,7 +43,7 @@ jobs:
             /p:AppxPackageVersion=${{ steps.version.outputs.version }}
 
       - name: Create release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           files: GlobalTeamWidget.Package/AppPackages/**/*.msix
