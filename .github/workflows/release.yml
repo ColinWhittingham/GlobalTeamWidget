@@ -30,6 +30,16 @@ jobs:
       - name: Restore
         run: dotnet restore GlobalTeamWidget.sln
 
+      - name: Set manifest version
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $path = "GlobalTeamWidget/Package.appxmanifest"
+          $xml = [xml](Get-Content $path)
+          $xml.Package.Identity.Version = $version
+          $xml.Save((Resolve-Path $path))
+          Write-Host "Manifest version set to $version"
+
       - name: Build MSIX
         run: |
           dotnet build GlobalTeamWidget/GlobalTeamWidget.csproj `
@@ -37,7 +47,6 @@ jobs:
             -r win-x64 `
             --no-restore `
             -p:AppxPackageSigningEnabled=false `
-            -p:AppxPackageVersion=${{ steps.version.outputs.version }} `
             -p:GenerateAppxPackageOnBuild=true `
             -p:UapAppxPackageBuildMode=SideloadOnly
 
@@ -54,7 +63,8 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          files: "**/*.msix"
+          files: GlobalTeamWidget/AppPackages/**/*_x64.msix
           generate_release_notes: true
-          body_prepend: |
+          append_body: true
+          body: |
             > **Installation:** This package is unsigned. You must enable [Developer Mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) on the target machine before installing.
