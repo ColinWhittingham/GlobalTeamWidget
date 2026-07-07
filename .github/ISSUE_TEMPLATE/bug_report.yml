@@ -1,0 +1,36 @@
+name: Bug report
+about: Report a bug or unexpected behavior
+description: Use this template to report a reproducible issue.
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+      placeholder: Describe the issue clearly.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: 1. Open the app...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Windows version, .NET version, and any relevant details.
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or logs
