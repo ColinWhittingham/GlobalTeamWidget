@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    tags: [ 'v*.*.*' ]
+    branches: [ main ]
 
 jobs:
   release:
@@ -22,12 +22,13 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Extract version from tag
+      - name: Compute version
         id: version
         shell: bash
         run: |
-          TAG="${GITHUB_REF_NAME#v}"
-          echo "version=${TAG}.0" >> $GITHUB_OUTPUT
+          BUILD=${{ github.run_number }}
+          echo "version=1.0.${BUILD}.0" >> $GITHUB_OUTPUT
+          echo "tag=v1.0.${BUILD}" >> $GITHUB_OUTPUT
 
       - name: Restore
         run: dotnet restore GlobalTeamWidget.sln
@@ -44,6 +45,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
           files: GlobalTeamWidget.Package/AppPackages/**/*.msix
           generate_release_notes: true
           body_prepend: |
