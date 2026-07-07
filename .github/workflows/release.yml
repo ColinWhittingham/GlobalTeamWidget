@@ -32,17 +32,27 @@ jobs:
 
       - name: Build MSIX
         run: |
-          dotnet publish GlobalTeamWidget/GlobalTeamWidget.csproj `
+          dotnet build GlobalTeamWidget/GlobalTeamWidget.csproj `
             -c Release `
             -r win-x64 `
+            --no-restore `
             -p:AppxPackageSigningEnabled=false `
             -p:AppxPackageVersion=${{ steps.version.outputs.version }}
+
+      - name: Locate MSIX
+        id: locate
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem -Recurse -Filter "*.msix" | Select-Object -ExpandProperty FullName
+          if (-not $files) { Write-Error "No .msix files found after build"; exit 1 }
+          $files | ForEach-Object { Write-Host "Found: $_" }
+          echo "glob=**/*.msix" >> $env:GITHUB_OUTPUT
 
       - name: Create release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          files: GlobalTeamWidget/bin/Release/**/*.msix
+          files: "**/*.msix"
           generate_release_notes: true
           body_prepend: |
             > **Installation:** This package is unsigned. You must enable [Developer Mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) on the target machine before installing.
