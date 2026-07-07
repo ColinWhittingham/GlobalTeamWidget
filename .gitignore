@@ -1,0 +1,63 @@
+# Build output
+bin/
+obj/
+out/
+
+# Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.rsuser
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# MSIX / AppX
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.msixbundle
+*.msixupload
+
+# .NET
+*.log
+*.cache
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Secrets / environment
+*.env
+.env*
+secrets.json
+appsettings.*.json
+
+# Dev signing certificates — never commit private keys
+*.pfx
+*.cer
+*.p12
+
+# Claude Code session data
+.claude/
+
+# Diagnostic output
+gtw_diag.txt
+
+# Test results
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
