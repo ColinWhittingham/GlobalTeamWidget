@@ -14,9 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v3
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
@@ -35,18 +32,17 @@ jobs:
 
       - name: Build MSIX
         run: |
-          msbuild GlobalTeamWidget.Package/GlobalTeamWidget.Package.wapproj `
-            /p:Configuration=Release `
-            /p:Platform=x64 `
-            /p:UapAppxPackageBuildMode=SideloadOnly `
-            /p:AppxPackageSigningEnabled=false `
-            /p:AppxPackageVersion=${{ steps.version.outputs.version }}
+          dotnet publish GlobalTeamWidget/GlobalTeamWidget.csproj `
+            -c Release `
+            -r win-x64 `
+            -p:AppxPackageSigningEnabled=false `
+            -p:AppxPackageVersion=${{ steps.version.outputs.version }}
 
       - name: Create release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          files: GlobalTeamWidget.Package/AppPackages/**/*.msix
+          files: GlobalTeamWidget/bin/Release/**/*.msix
           generate_release_notes: true
           body_prepend: |
             > **Installation:** This package is unsigned. You must enable [Developer Mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) on the target machine before installing.
