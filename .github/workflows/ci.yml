@@ -25,4 +25,4 @@ jobs:
         run: dotnet build GlobalTeamWidget.sln -c Debug --no-restore
 
       - name: Test
-        run: dotnet test GlobalTeamWidget.Tests/GlobalTeamWidget.Tests.csproj -c Debug --no-build --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test GlobalTeamWidget.Tests/GlobalTeamWidget.Tests.csproj -c Debug --no-restore --logger "trx;LogFileName=test-results.trx"
