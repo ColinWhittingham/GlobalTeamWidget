@@ -22,7 +22,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.2.*" />
     <PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="2.0.*" />
-    <PackageReference Include="TimeZoneConverter" Version="6.*" />
+    <PackageReference Include="TimeZoneConverter" Version="8.*" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.*" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.*" />
     <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="10.*" />
